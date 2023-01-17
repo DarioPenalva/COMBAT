@@ -18,11 +18,13 @@ public class Jugador {
     int bonificacioAtac;
     int bonificacioDefensa;
     int bonificacioVida;
-    // Per comprobar si hem perdut
 
+    // Per comprobar si hem perdut
     public boolean haPerdut() {
         return puntsDeVida <= 0;
     }
+
+    // Això és la IA:
     public String triaEstrategiaAleatoria() {
         Random r = new Random();
         String[] estrategies = {"A","D","E","M"};
@@ -66,6 +68,7 @@ public class Jugador {
             capAtacMaxima += bonificacioAtac;
             capDefensaMaxima += bonificacioDefensa;
             puntsDeVidaMaxims += bonificacioVida;
+            puntsPujarNivell = puntsPujarNivell + puntsPujarNivell / 2 ; // Pujar el pròxim nivell costa més
         }
     }
     public void recuperacio() {

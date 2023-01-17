@@ -5,7 +5,7 @@ public class bestiari {
     static Jugador jugadorAleatori(int lvl) {
         Random r = new Random();
         if (lvl < 1) lvl = 1;
-        String nom = nomAleatori(lvl);
+        String nom = nomAleatori(lvl).toUpperCase();
         String[] tipus = {"M","O","C","A","T"};
         int index = r.nextInt(tipus.length);
         String tip = tipus[index];
@@ -34,18 +34,18 @@ public class bestiari {
         Scanner scanner = new Scanner(System.in);
         String nom = "";
         String tip = "";
-        while (nom.length() <= 2 || nom.length() >= 13) {
+        while (nom.length() <= 2 || nom.length() >= 10) {
             Screen.clear();
             Combat.mostraTriaNom(25,5,border);
             Screen.show();
-            nom = scanner.nextLine();
+            nom = scanner.nextLine().toUpperCase();
             if (nom.length() <= 2) {
                 Screen.clear();
                 Combat.mostraErrorNomCurt(22,5,border);
                 Combat.mostraContinuar(25,21,"continuar",false,border);
                 Screen.show();
                 String error = scanner.nextLine();
-            } else if (nom.length() >= 13) {
+            } else if (nom.length() >= 10) {
                 Screen.clear();
                 Combat.mostraErrorNomLlarg(22,5,border);
                 Combat.mostraContinuar(25,21,"continuar",false,border);
@@ -57,7 +57,7 @@ public class bestiari {
             Screen.clear();
             Combat.mostraTriaTipus(20,5,border);
             Screen.show();
-            tip = scanner.nextLine();
+            tip = scanner.nextLine().toUpperCase();
             if (!tip.equals("M") && !tip.equals("O") && !tip.equals("C") && !tip.equals("T") && !tip.equals("A"))  {
                 Screen.clear();
                 Combat.mostraErrorTipus(25,5,border);

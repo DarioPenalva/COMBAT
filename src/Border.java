@@ -27,6 +27,19 @@ public class Border {
                 borderMidRight = ']';
                 break;
             case "2":
+                borderLeft = '▏';
+                borderRight = '▕';
+                borderTop = '▾';
+                borderMid = '▻';
+                borderBottom = '▴';
+                borderBottomRight = '◢';
+                borderBottomLeft = '◣';
+                borderTopRight = '◥';
+                borderTopLeft = '◤';
+                borderMidLeft = '▶';
+                borderMidRight = '◀';
+                break;
+            case "3":
                 borderLeft = '│';
                 borderRight = '│';
                 borderTop = '─';
@@ -39,20 +52,33 @@ public class Border {
                 borderMidLeft = '├';
                 borderMidRight = '┤';
                 break;
-            case "3":
-                borderLeft = '█';
-                borderRight = '█';
-                borderTop = '▀';
-                borderMid = '▀';
-                borderBottom = '▄';
-                borderBottomRight = '█';
-                borderBottomLeft = '█';
-                borderTopRight = '█';
-                borderTopLeft = '█';
-                borderMidLeft = '█';
-                borderMidRight = '█';
-                break;
             case "4":
+                borderLeft = '│';
+                borderRight = '│';
+                borderTop = '═';
+                borderMid = '═';
+                borderBottom = '═';
+                borderBottomRight = '╛';
+                borderBottomLeft = '╘';
+                borderTopRight = '╕';
+                borderTopLeft = '╒';
+                borderMidLeft = '╞';
+                borderMidRight = '╡';
+                break;
+            case "5":
+                borderLeft = '║';
+                borderRight = '║';
+                borderTop = '─';
+                borderMid = '─';
+                borderBottom = '─';
+                borderBottomRight = '╜';
+                borderBottomLeft = '╙';
+                borderTopRight = '╖';
+                borderTopLeft = '╓';
+                borderMidLeft = '╟';
+                borderMidRight = '╢';
+                break;
+            case "6":
                 borderLeft = '║';
                 borderRight = '║';
                 borderTop = '═';
@@ -64,6 +90,33 @@ public class Border {
                 borderTopLeft = '╔';
                 borderMidLeft = '╠';
                 borderMidRight = '╣';
+                break;
+            case "7":
+                borderLeft = '█';
+                borderRight = '█';
+                borderTop = '▀';
+                borderMid = '▬';
+                borderBottom = '▄';
+                borderBottomRight = '█';
+                borderBottomLeft = '█';
+                borderTopRight = '█';
+                borderTopLeft = '█';
+                borderMidLeft = '█';
+                borderMidRight = '█';
+                break;
+            case "8":
+                borderLeft = '┋';
+                borderRight = '┋';
+                borderTop = '┅';
+                borderMid = '┅';
+                borderBottom = '┅';
+                borderBottomRight = '┛';
+                borderBottomLeft = '┗';
+                borderTopRight = '┓';
+                borderTopLeft = '┏';
+                borderMidLeft = '┋';
+                borderMidRight = '┋';
+                break;
             default:
         }
     }
