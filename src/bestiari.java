@@ -6,7 +6,7 @@ public class bestiari {
         Random r = new Random();
         if (lvl < 1) lvl = 1;
         String nom = nomAleatori(lvl).toUpperCase();
-        String[] tipus = {"M","O","C","A","T"};
+        String[] tipus = {"M","S","C","A","E"};
         int index = r.nextInt(tipus.length);
         String tip = tipus[index];
         return creaJugador(nom,tip,lvl);
@@ -44,13 +44,13 @@ public class bestiari {
                 Combat.mostraErrorNomCurt(22,5,border);
                 Combat.mostraContinuar(25,21,"continuar",false,border);
                 Screen.show();
-                String error = scanner.nextLine();
+                scanner.nextLine();
             } else if (nom.length() >= 10) {
                 Screen.clear();
                 Combat.mostraErrorNomLlarg(22,5,border);
                 Combat.mostraContinuar(25,21,"continuar",false,border);
                 Screen.show();
-                String error = scanner.nextLine();
+                scanner.nextLine();
             }
         }
         while (tip.equals("")) {
@@ -58,7 +58,7 @@ public class bestiari {
             Combat.mostraTriaTipus(20,5,border);
             Screen.show();
             tip = scanner.nextLine().toUpperCase();
-            if (!tip.equals("M") && !tip.equals("O") && !tip.equals("C") && !tip.equals("T") && !tip.equals("A"))  {
+            if (!tip.equals("M") && !tip.equals("S") && !tip.equals("C") && !tip.equals("E") && !tip.equals("A"))  {
                 Screen.clear();
                 Combat.mostraErrorTipus(25,5,border);
                 Combat.mostraContinuar(25,21,"continuar",false,border);
@@ -78,23 +78,23 @@ public class bestiari {
             // Mag
             jugador.puntsPujarNivell = 4;
 
-            jugador.bonificacioAtac = 3;
+            jugador.bonificacioAtac = 4;
             jugador.bonificacioDefensa = 1;
-            jugador.bonificacioVida = 2;
+            jugador.bonificacioVida = 3;
 
-            jugador.capAtacMaxima = 5 + (jugador.bonificacioAtac * (nivell - 1));
-            jugador.capDefensaMaxima = 10 + (jugador.bonificacioDefensa * (nivell - 1));
+            jugador.capAtacMaxima = 3 + (jugador.bonificacioAtac * (nivell - 1));
+            jugador.capDefensaMaxima = 7 + (jugador.bonificacioDefensa * (nivell - 1));
             jugador.puntsDeVidaMaxims = 10 + (jugador.bonificacioVida * (nivell - 1));
-        } else if (tip.equals("O")) {
+        } else if (tip.equals("S")) {
             // Orc
             jugador.puntsPujarNivell = 4;
 
             jugador.bonificacioAtac = 1;
             jugador.bonificacioDefensa = 3;
-            jugador.bonificacioVida = 2;
+            jugador.bonificacioVida = 3;
 
-            jugador.capAtacMaxima = 10 + (jugador.bonificacioAtac * (nivell - 1));
-            jugador.capDefensaMaxima = 5 + (jugador.bonificacioDefensa * (nivell - 1));
+            jugador.capAtacMaxima = 7 + (jugador.bonificacioAtac * (nivell - 1));
+            jugador.capDefensaMaxima = 3 + (jugador.bonificacioDefensa * (nivell - 1));
             jugador.puntsDeVidaMaxims = 10 + (jugador.bonificacioVida * (nivell - 1));
         } else if (tip.equals("C")) {
             // Cavaller
@@ -102,32 +102,32 @@ public class bestiari {
 
             jugador.bonificacioAtac = 2;
             jugador.bonificacioDefensa = 2;
-            jugador.bonificacioVida = 2;
+            jugador.bonificacioVida = 3;
 
-            jugador.capAtacMaxima = 8 + (jugador.bonificacioAtac * (nivell - 1));
-            jugador.capDefensaMaxima = 7 + (jugador.bonificacioDefensa * (nivell - 1));
+            jugador.capAtacMaxima = 5 + (jugador.bonificacioAtac * (nivell - 1));
+            jugador.capDefensaMaxima = 5 + (jugador.bonificacioDefensa * (nivell - 1));
             jugador.puntsDeVidaMaxims = 10 + (jugador.bonificacioVida * (nivell - 1));
         } else if (tip.equals("A")) {
             // Aprenent
-            jugador.puntsPujarNivell = 3;
-
-            jugador.bonificacioAtac = 3;
-            jugador.bonificacioDefensa = 3;
-            jugador.bonificacioVida = 3;
-
-            jugador.capAtacMaxima = 4 + (jugador.bonificacioAtac * (nivell - 1));
-            jugador.capDefensaMaxima = 4 + (jugador.bonificacioDefensa * (nivell - 1));
-            jugador.puntsDeVidaMaxims = 10 + (jugador.bonificacioVida * (nivell - 1));
-        } else if (tip.equals("T")) {
-            // Troll
             jugador.puntsPujarNivell = 4;
 
-            jugador.bonificacioAtac = 2;
+            jugador.bonificacioAtac = 4;
             jugador.bonificacioDefensa = 1;
             jugador.bonificacioVida = 3;
 
-            jugador.capAtacMaxima = 10 + (jugador.bonificacioAtac * (nivell - 1));
-            jugador.capDefensaMaxima = 8 + (jugador.bonificacioDefensa * (nivell - 1));
+            jugador.capAtacMaxima = 7 + (jugador.bonificacioAtac * (nivell - 1));
+            jugador.capDefensaMaxima = 3 + (jugador.bonificacioDefensa * (nivell - 1));
+            jugador.puntsDeVidaMaxims = 10 + (jugador.bonificacioVida * (nivell - 1));
+        } else if (tip.equals("E")) {
+            // Escuder
+            jugador.puntsPujarNivell = 4;
+
+            jugador.bonificacioAtac = 1;
+            jugador.bonificacioDefensa = 4;
+            jugador.bonificacioVida = 3;
+
+            jugador.capAtacMaxima = 3 + (jugador.bonificacioAtac * (nivell - 1));
+            jugador.capDefensaMaxima = 7 + (jugador.bonificacioDefensa * (nivell - 1));
             jugador.puntsDeVidaMaxims = 10 + (jugador.bonificacioVida * (nivell - 1));
         } else {
             throw new RuntimeException("Tipus de jugador no reconegut");

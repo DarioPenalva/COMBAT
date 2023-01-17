@@ -1,5 +1,4 @@
 import javax.sound.sampled.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -46,22 +45,13 @@ public class Combat {
         Maniobra    | J1: Dany      | J2: Penalitzat  | J2: Penalitzat | J1 & J2: Penalitzat
                 */
 
-        playSound("sounds/MortalKombat.wav");
+        Musica.playSound("sounds/MortalKombat.wav");
         Border border = new Border();
         menuPrincipal(border);
 
     }
 
-    // He trobat això a Stack Overflow i m'ha parescut molt guay, així que he afegit un toque extra quan obres el joc...
-    public static void playSound(String soundFile) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
-        File f = new File("" + soundFile);
-        AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioIn);
-        clip.start();
-    }
-    // Tot i que no m'agrada afegir codi que no entenc del tot bé, com a mínim he deduït com fer-ho servir, ja que no estava prou ben explicat.
-    // ¡¡¡Apaga el volum si no vols que et molesti!!!
+
 
     private static Boolean nouCombat(Jugador jugador1, Jugador jugador2, Border border, int nCombat,Boolean nouPersonatge,Boolean dosJugadors) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         Scanner scanner = new Scanner(System.in);
@@ -69,7 +59,7 @@ public class Combat {
         boolean guanyes = false;
         boolean pujaNivell = false;
         int recordaNivell = jugador1.nivell;
-        int[] victories = { 0, 0 };
+        int[] victories = { 0, 0 ,0};
         for (int ronda = 0; ronda < NCOMBATS; ronda++) {
             if (!dosJugadors) {
                 if (recordaNivell != jugador1.nivell) {
@@ -84,7 +74,7 @@ public class Combat {
                 if (guanyes) mostraNovaPuntuacio(25,14,border,(jugador2.nivell+1)/2,pujaNivell,jugador1.nom);
                 pujaNivell = false;
                 guanyes = false;
-                if (nouPersonatge) mostraNouPersonatge(24,14,border);
+                if (nouPersonatge) mostraNouPersonatge(24,14, jugador1.nom,border);
                 nouPersonatge = false;
             } else { // Detalls mode 2 jugadors:
                 mostraInfo(16,4,jugador1,border);
@@ -116,6 +106,10 @@ public class Combat {
             // Recupera els jugadors abans del següent combat
             jugador1.recuperacio();
             jugador2.recuperacio();
+
+            // Comprova si s'han de fer més rondes o no, ja que has guanyat/perdut al millor de NCOMBATS.
+            if (victories[0] > NCOMBATS/2 || victories[1] > NCOMBATS/2) break;
+            if (victories[2] > NCOMBATS/2 && (victories[0] >= NCOMBATS/3 || victories[1] >= NCOMBATS/3)) break;
         }
         // Comprova el resultat per saber si es continuen les lluites
         Screen.clear();
@@ -175,7 +169,7 @@ public class Combat {
                 estratJugador1 = scanner.nextLine().toUpperCase();
             }
             if (!dosJugadors) {
-                estratJugador2 = jugador2.triaEstrategiaAleatoria();
+                estratJugador2 = jugador2.decisioIA(estratJugador1);
             } else {
                 while (!estratJugador2.equals("A") && !estratJugador2.equals("D") && !estratJugador2.equals("E") && !estratJugador2.equals("M")) {
                     // Mostra l'estat dels jugadors
@@ -218,7 +212,7 @@ public class Combat {
             scanner.nextLine();
 
             // Fi del torn
-            if (torn >= NTORNS) { // Si s'acaba el màxim de torns:
+            if (torn >= NTORNS && !jugador1.haPerdut() && !jugador2.haPerdut()) { // Si s'acaba el màxim de torns mentres ningú perd:
                 Screen.clear();
                 mostraTempsAcabat(18,4,border);
                 mostraContinuar(25,21,"conclusió",false,border);
@@ -254,6 +248,7 @@ public class Combat {
             return true;
         }
         if (jugador1.haPerdut() && jugador2.haPerdut()) {
+            victories[2]++;
             missatgeEmpat(18,4,border,jugador1,jugador2);
             Screen.show();
             scanner.nextLine();
@@ -510,9 +505,10 @@ public class Combat {
     }
 
     private static String dibuixaBarra(int puntsActuals,int puntsMaxims,char c) {
-        int kokoros = (((puntsActuals * 120) / puntsMaxims) / 10);
+        int llargBarra = (((puntsActuals * 120) / puntsMaxims) / 10);
+        if (puntsActuals == 1) llargBarra = 1;
         String barraVida = "";
-        for (int i = 0; i < kokoros; i++) {
+        for (int i = 0; i < llargBarra; i++) {
             barraVida += c;
         }
         return barraVida;
@@ -652,11 +648,11 @@ public class Combat {
         dibuixaQuadrat(x,y,51,8,true, border);
 
         Screen.print(15+x, 1+y, "- TRIA EL TEU TIPUS -",Screen.RED);
-        Screen.print(5+x, 3+y, "» (A)prenent: Molt dèbil, millora aviat «");
-        Screen.print(5+x, 4+y, "» (C)avaller: Equilibrat i versàtil     «");
-        Screen.print(5+x, 5+y, "» (M)ag: Destaca amb la defensa         «");
-        Screen.print(5+x, 6+y, "» (O)rc: Destaca amb l'atac             «");
-        Screen.print(5+x, 7+y, "» (T)roll: Molt fort, millora poc       «");
+        Screen.print(5+x, 3+y, "» (C)avaller: Equilibrat i versàtil      «");
+        Screen.print(5+x, 4+y, "» (A)ssassí:  Enfocat amb l'atac         «");
+        Screen.print(5+x, 5+y, "» (E)scuder:  Enfocat amb la defensa     «");
+        Screen.print(5+x, 6+y, "» (M)ag:      Poc atac, millora molt     «");
+        Screen.print(5+x, 7+y, "» (S)acerdot: Poca defensa, millora molt «");
     }
     static void mostraErrorTipus(int x, int y, Border border) {
         dibuixaQuadrat(x,y,41,4,true, border);
@@ -664,12 +660,12 @@ public class Combat {
         Screen.print(11+x, 1+y, "- TIPUS INVALID -",Screen.RED);
         Screen.print(6+x, 3+y, "¡Tria un tipus de la llista!",Screen.RED);
     }
-    static void mostraNouPersonatge(int x, int y, Border border) {
+    static void mostraNouPersonatge(int x, int y,String nom, Border border) {
         dibuixaQuadrat(x,y,43,5,true, border);
 
-        Screen.print(12+x, 1+y, "- NOU PERSONATGE -",Screen.RED);
-        Screen.print(3+x, 3+y, "Aquests són els teus atributs inicials");
-        Screen.print(7+x, 4+y, "¡Aviat serà hora de combatre!");
+        Screen.print(13+x, 1+y, "- NOU PERSONATGE -",Screen.RED);
+        Screen.print(12+x-(nom.length()/2), 3+y, String.format("Benvingut al ring, %s", nom));
+        Screen.print(8+x, 4+y, "¡Aviat serà hora de lluitar!");
     }
     static void mostraMenuComEsJuga(int x, int y, Border border) {
         dibuixaQuadrat(x,y,99,15,true, border);
@@ -719,21 +715,54 @@ public class Combat {
     static void mostraConfirmaBorder(int x, int y, Border border) {
         dibuixaQuadrat(x,y,40,5,true, border);
 
-        Screen.print(10+x, 1+y, "- CONFIRMACIÓ VORA -");
+        Screen.print(10+x, 1+y, "- CONFIRMACIÓ VORA -",Screen.RED);
         Screen.print(5+x, 3+y, "» (1) M'agrada aquesta vora «");
         Screen.print(5+x, 4+y, "» (2) Tria un altre vora    «");
     }
     static void mostraMenuContinua(int x, int y, Border border) {
         dibuixaQuadrat(x,y,40,4,true, border);
 
-        Screen.print(14+x, 1+y, "- CONTINUA -");
+        Screen.print(14+x, 1+y, "- CONTINUA -",Screen.RED);
         Screen.print(3+x, 3+y, "¡Aquesta opció no està disponible!");
     }
-    static void mostraMenuEstadistiques(int x, int y, Border border) {
-        dibuixaQuadrat(x,y,40,4,true, border);
+    static void mostraMenuEstadistiques(int x, int y, Border border,Jugador jugador1, Jugador jugador2) {
+        if (jugador1.punts != -1) {
+            dibuixaQuadrat(x,y,40,4,true, border);
 
-        Screen.print(10+x, 1+y, "- ESTADISTIQUES -");
-        Screen.print(3+x, 3+y, "¡Aquesta opció no està disponible!");
+            Screen.print(12+x, 1+y, "- ESTADISTIQUES -",Screen.RED);
+            Screen.print(4+x, 3+y, "Aquest és el teu millor resultat:");
+
+            // Estats Jugador1
+            dibuixaQuadrat(x-15,y+5,25,6,true, border);
+
+            Screen.print(2+x-15, 1+y+5, "Nom:     ");
+            Screen.print(2+x+9-15, 1+y+5, String.format("%s (%s)",jugador1.nom, jugador1.tipus));
+            Screen.print(2+x-15, 3+y+5, "Nivell:  ");
+            Screen.print(2+x+9-15, 3+y+5, String.format("%d",jugador1.nivell));
+            Screen.print(2+x-15, 4+y+5, "Punts:   ");
+            Screen.print(2+x+9-15, 4+y+5, String.format("%d",jugador1.punts));
+
+            // Estats Enemic
+            dibuixaQuadrat(x+30,y+5,25,6,true, border);
+
+            Screen.print(2+x+30, 1+y+5, "Nom:     ");
+            Screen.print(2+x+9+30, 1+y+5, String.format("%s (%s)",jugador2.nom, jugador2.tipus));
+            Screen.print(2+x+30, 3+y+5, "Nivell:  ");
+            Screen.print(2+x+9+30, 3+y+5, String.format("%d",jugador2.nivell));
+            Screen.print(2+x+30, 4+y+5, "Punts:   ");
+            Screen.print(2+x+9+30, 4+y+5, String.format("%d",jugador2.punts));
+
+            // Missatge:
+            dibuixaQuadrat(x-15,y+12,70,2,false, border);
+            Screen.print(2+x-15, 12+y+1, String.format("%s va ser derrotat amb %d punts a mans de %s",jugador1.nom,jugador1.punts,jugador2.nom));
+        } else {
+            dibuixaQuadrat(x,y,40,6,true, border);
+
+            Screen.print(12+x, 1+y, "- ESTADISTIQUES -",Screen.RED);
+            Screen.print(2+x, 3+y, "¡No hi ha cap estadística disponible!");
+            Screen.print(7+x, 4+y, "Juga en el mode 'Un Jugador'");
+            Screen.print(3+x, 5+y, "podràs veure el teu millor resultat");
+        }
     }
     private static void dibuixaQuadrat(int x, int y, int w, int h, boolean header, Border border) {
         String color = Screen.PURPLE;
@@ -760,6 +789,9 @@ public class Combat {
     private static void menuPrincipal(Border border) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         Scanner scanner = new Scanner(System.in);
         Boolean opcioInvalida = false;
+        Jugador jugador3 = new Jugador();
+        jugador3.punts = -1;
+        Jugador jugador4 = new Jugador();
         while (true) {
             Screen.clear();
             if (opcioInvalida) mostraMenuOpcioInvalida(24,17,border);
@@ -781,10 +813,18 @@ public class Combat {
                         Jugador jugador1 = bestiari.triaJugador(border);
                         // Comencem el bucle de combats
                         for (int combats = 0; combats < NADVERSARIS; combats++) {
-                            int nivellAdversari = -3 + combats + jugador1.nivell;
+                            int nivellAdversari = jugador1.nivell;
+                            if (combats >= NADVERSARIS/2) {
+                                nivellAdversari = jugador1.nivell + combats / 3;
+                            }
                             Jugador jugador2 = bestiari.jugadorAleatori(nivellAdversari);
                             Boolean derrota = nouCombat(jugador1,jugador2,border,combats+1,nouPersonatge,false);
                             nouPersonatge = false;
+                            // Això per fer l'estadística:
+                            if (jugador1.punts >= jugador3.punts){
+                                jugador3 = jugador1;
+                                jugador4 = jugador2;
+                            }
                             if (derrota) {
                                 break;
                             }
@@ -819,15 +859,15 @@ public class Combat {
                     mostraMenuContinua(25,5,border);
                     mostraContinuar(25,21,"continuar",false,border);
                     Screen.show();
-                    menu = scanner.nextLine();
+                    scanner.nextLine();
                     break;
                 case "3":
                 case "Estadistiques":
                     Screen.clear();
-                    mostraMenuEstadistiques(25,5,border);
+                    mostraMenuEstadistiques(25,5,border,jugador3,jugador4);
                     mostraContinuar(25,21,"continuar",false,border);
                     Screen.show();
-                    menu = scanner.nextLine();
+                    scanner.nextLine();
                     break;
                 case "4":
                 case "Opcions":
@@ -864,7 +904,7 @@ public class Combat {
                     mostraMenuComEsJuga(2,3,border);
                     mostraContinuar(31,21,"continuar",false,border);
                     Screen.show();
-                    menu = scanner.nextLine();
+                    scanner.nextLine();
                     break;
                 case "6":
                 case "exit":
